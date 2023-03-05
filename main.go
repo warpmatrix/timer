@@ -2,18 +2,25 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"time"
+	"timer/utils"
+
+	flag "github.com/spf13/pflag"
 )
 
 func main() {
-	name := os.Args[1]
+	name := "untitled"
+	if len(flag.Args()) > 0 {
+		name = flag.Args()[0]
+	}
 	fmt.Println("new task:", name)
-	count_down(45*time.Minute, func() {
-		Notify("session end", "it's time to take a break")
+	sess, _ := time.ParseDuration(utils.Get_flag("time"))
+	rest, _ := time.ParseDuration(utils.Get_flag("rest"))
+	count_down(sess, func() {
+		utils.Notify("session end", "it's time to take a break")
 	})
-	count_down(15*time.Minute, func() {
-		Notify("time's up", "the rest time is finished")
+	count_down(rest, func() {
+		utils.Notify("time's up", "the rest time is finished")
 	})
 }
 
